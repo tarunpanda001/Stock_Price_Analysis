@@ -16,7 +16,14 @@ with col2:
     ed = st.date_input("End Date",datetime(2024,1,1))
 
 ticker = yf.Ticker(option)
-ticker_data = ticker.history(start=sd,end = ed)
+
+@st.cache_data
+def load_data(option, sd, ed):
+    ticker = yf.Ticker(option)
+    data = ticker.history(start=sd, end=ed)
+    return data
+
+ticker_data = load_data(option, sd, ed)
 
 st.subheader(f"Historical Price Data for {option}")
 st.dataframe(ticker_data.head())
