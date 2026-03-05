@@ -57,12 +57,23 @@ fig = go.Figure(data=[go.Candlestick(
 st.plotly_chart(fig)
 
 
+
 st.download_button(
     label="Download Data as CSV",
     data  = ticker_data.to_csv().encode('utf-8'),
     file_name = f"{option}_data.csv",
     mime = "text/csv"
 )
+
+investment = st.number_input("Enter investment amount", value=10000)
+
+first_price = ticker_data["Close"].iloc[0]
+last_price = ticker_data["Close"].iloc[-1]
+
+returns = (last_price - first_price) / first_price
+profit = investment * returns
+
+st.write("Estimated Profit/Loss:", round(profit,2))
 
 st.subheader("Statistical Summary")
 
@@ -73,3 +84,4 @@ st.markdown(
     "<center>Developed by <b>Tarun Panda</b> | Stock Price Analysis App</center>",
     unsafe_allow_html=True
 )
+
