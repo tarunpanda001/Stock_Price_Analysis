@@ -34,14 +34,22 @@ st.line_chart(ticker_data["Close"])
 st.subheader("Stock Volume")
 st.bar_chart(ticker_data["Volume"])
 
-info = ticker.info
+
+current_price = ticker_data["Close"].iloc[-1]
+high_52 = ticker_data["High"].max()
+low_52 = ticker_data["Low"].min()
+
 col1,col2,col3 = st.columns(3)
+
 with col1:
-    st.metric(f"{option} Current Price",f"${info['currentPrice']}")
+    st.metric(f"{option} Current Price", f"${round(current_price,2)}")
+
 with col2:
-    st.metric(f"{option}"+" 52 Week High",f"${info['fiftyTwoWeekHigh']}")
+    st.metric(f"{option} 52 Week High", f"${round(high_52,2)}")
+
 with col3:
-    st.metric(f"{option}"+" 52 Week Low",f"${info['fiftyTwoWeekLow']}")
+    st.metric(f"{option} 52 Week Low", f"${round(low_52,2)}")
+
 
 ticker_data["MA50"] = ticker_data["Close"].rolling(window=50).mean()
 ticker_data["MA200"] = ticker_data["Close"].rolling(window=200).mean()
@@ -80,7 +88,10 @@ last_price = ticker_data["Close"].iloc[-1]
 returns = (last_price - first_price) / first_price
 profit = investment * returns
 
-st.write("Estimated Profit/Loss:", round(profit,2))
+if profit > 0:
+    st.success(f"Estimated Profit: ${round(profit,2)}")
+else:
+    st.error(f"Estimated Loss: ${round(profit,2)}")
 
 st.subheader("Statistical Summary")
 
